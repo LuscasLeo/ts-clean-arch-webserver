@@ -1,0 +1,7 @@
+node_modules
+database/*.sqlite
+dist
+yarn.lock
+yarn-error.log
+.vscode/*
+!.vscode/launch.json
