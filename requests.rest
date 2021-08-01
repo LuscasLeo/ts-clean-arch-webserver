@@ -1,0 +1,18 @@
+// Index
+GET http://localhost:3000
+
+###
+
+// List Users
+GET http://localhost:3000/users 
+###
+
+POST http://localhost:3000/users
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIn0.yCYyy6yYgTIrbfrQ1n_VrwmlusBHPnU1Q1yzZDSLql0
+Content-Type: application/json
+
+{
+    "name": "LuscasLeo",
+    "password": "12312"    
+}
+

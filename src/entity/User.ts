@@ -1,20 +1,47 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Exclude } from "class-transformer";
+import { IsArray, IsBoolean, IsDate, IsDateString, IsNumber, IsString } from "class-validator";
+import {
+  Column,
+  CreateDateColumn,
+  Entity, PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from "typeorm";
 
+export enum AppRoles {
+  USER = "USER",
+  ADVANCED = "ADVANCED",
+  USERADMIN = "USERADMIN",
+  ADMIN = "ADMIN",
+}
 @Entity("users")
 export default class User {
-    
-    @PrimaryGeneratedColumn('increment')
-    id: number
 
-    @Column()
-    name: string
-    
-    @Column()
-    age: number
+  @IsNumber()
+  @PrimaryGeneratedColumn("increment")
+  id: number;
 
-    @CreateDateColumn()
-    createdAt: Date
+  @IsString()
+  @Column({ unique: true })
+  name: string;
 
-    @UpdateDateColumn()
-    updatedAt: Date
+  @Exclude()
+  @Column()
+  password: string;
+
+  @IsArray()
+  @Column({
+    type: "text",
+    enum: AppRoles,
+    array: true,
+  })
+  roles: AppRoles[];
+
+  @IsDate()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @IsDateString()
+  @UpdateDateColumn()
+  updatedAt: Date;
+  
 }

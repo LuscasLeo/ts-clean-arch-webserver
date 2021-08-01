@@ -1,53 +1,41 @@
-import express, { NextFunction, Request, Response } from "express";
-import "express-async-errors";
-import morgan from "morgan";
+// import "express-async-errors";
 import "reflect-metadata";
+import * as routingControllers from "routing-controllers";
+import * as typeDI from "typedi";
+import * as typeorm from "typeorm";
+import * as typeormTypediExtensions from "typeorm-typedi-extensions";
+import Application from "./app";
 import { createDatabaseConnection } from "./database";
-import { useRoutes } from "./controllers/routes";
-import { HttpError } from "./types";
-import { ValidationErrorSet } from "./validations";
+import { getLogger } from "./logging";
+import ConfigurationService from "./services/configuration.service";
+
+/**
+ * [x] Loggers
+ * [x] User Roles
+ * [x] Authentication
+ * [x] Password Encryption
+ * [x] Create default user
+ * [ ] Tests
+ * [ ] Environment variables
+ * [ ]
+ * [ ]
+ */
+
+const logger = getLogger("Bootstrap");
 
 async function bootstrap() {
-  console.log("Initializing application");
-  
-  console.log("Initializing Db connection");
-  await createDatabaseConnection()
-  console.log("Connected");
-  
-  const app = express();
+  typeorm.useContainer(typeormTypediExtensions.Container);
+  routingControllers.useContainer(typeDI.Container);
 
-  app.use(express.json());
-  app.use(morgan("common"));
+  logger.info("🚀 Initializing application");
+  await createDatabaseConnection(typeDI.Container.get(ConfigurationService));
+  logger.info(`📚 Connected to database`);
 
-  useRoutes(app);
+  const application = typeDI.Container.get(Application);
 
-  app.listen(3000, () => {
-    console.log("App listening to 3000");
-  });
+  await application.preStart();
 
-  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
-    if (err instanceof HttpError) {
-      return res.status(err.status).json({
-        code: err.status,
-        message: err.message,
-      });
-    }
-
-    if (err instanceof ValidationErrorSet) {
-      return res.status(400).json({
-        message: "Error on validating payload",
-        errors: err.errors,
-      });
-    }
-
-    if (err instanceof Error) {
-      return res.status(400).json({ message: err.message, name: err.name, stack: err.stack });
-    }
-
-    console.error(`Error handling ${req.method} to ${req.path} `, err);
-
-    return res.status(500).json({ message: "Internal Server Error!" });
-  });
+  await application.start();
 }
 
-bootstrap().catch((err) => console.error(err));
+bootstrap().catch((err) => logger.error("Error on application startup!", err));

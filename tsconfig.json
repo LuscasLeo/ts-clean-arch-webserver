@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",                          
+    "target": "ES2015",                          
     "module": "commonjs",                    
     "lib": ["es6"],                     
-    "allowJs": true,
+    // "allowJs": true,
     "outDir": "dist",                          
     "rootDir": "src",
     "strict": true,         
@@ -14,5 +14,5 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true
-  }
+  }, "include": ["src"]
 }
