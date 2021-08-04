@@ -1,24 +1,22 @@
+import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 import { Express, NextFunction, Request, Response } from "express";
 import { JsonWebTokenError } from "jsonwebtoken";
 import {
   createExpressServer,
   getMetadataArgsStorage,
   HttpError,
-  RoutingControllersOptions,
+  RoutingControllersOptions
 } from "routing-controllers";
 import { routingControllersToSpec } from "routing-controllers-openapi";
 import { AuthorizationChecker } from "routing-controllers/types/AuthorizationChecker";
 import { CurrentUserChecker } from "routing-controllers/types/CurrentUserChecker";
-import { QueryFailedError } from "typeorm";
-import ApplicationController from "./controllers/application.controller";
-import SessionController from "./controllers/session.controller";
-import UsersController from "./controllers/users.controller";
-import { getLogger } from "./logging";
-import { ValidationErrorSet } from "./middlewares/validations";
 import swaggerUi from "swagger-ui-express";
-import { validationMetadatasToSchemas } from "class-validator-jsonschema";
+import { QueryFailedError } from "typeorm";
+import { getLogger } from "../logging";
+import { ValidationErrorSet } from "../middlewares/validations";
+import controllers from "./controllers";
 
-const controllers = [ApplicationController, UsersController, SessionController];
+
 
 const logger = getLogger("server");
 

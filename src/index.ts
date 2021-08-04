@@ -16,7 +16,7 @@ import ConfigurationService from "./services/configuration.service";
  * [x] Password Encryption
  * [x] Create default user
  * [ ] Tests
- * [ ] Environment variables
+ * [x] Environment variables
  * [ ]
  * [ ]
  */

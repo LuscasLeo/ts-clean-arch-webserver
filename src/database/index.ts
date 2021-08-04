@@ -1,12 +1,11 @@
 import {
   ConnectionOptions,
   createConnection,
-  getConnectionOptions,
+  getConnectionOptions
 } from "typeorm";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import User from "./entity/User";
-import { getLogger } from "./logging";
-import ConfigurationService from "./services/configuration.service";
+import { getLogger } from "../logging";
+import ConfigurationService from "../services/configuration.service";
+import entities from "./entities";
 
 const logger = getLogger("database");
 
@@ -43,7 +42,7 @@ export async function createDatabaseConnection(
       password: databasePassword,
       database: databaseName,
       logging: databaseLogEnabled,
-      entities: [User],
+      entities,
     };
 
     const connection = await createConnection({

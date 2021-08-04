@@ -27,11 +27,13 @@ export default class SessionController {
   async signIn(@Body() { username, password }: SignInPayload) {
     const user = await this.usersService.getUserByName(username);
 
-    if (!user) throw new HttpError(401, "Incorrect username");
+    const errorMessage = "Incorrect Credentials!"
+
+    if (!user) throw new HttpError(401, errorMessage);
     const compared = await this.authService.compare(password, user.password);
 
     if (!compared) {
-      throw new HttpError(401, "Incorrect credentials!");
+      throw new HttpError(401, errorMessage);
     }
 
     const token = this.authService.encodeAuth({
