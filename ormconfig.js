@@ -16,6 +16,7 @@ const config = {
 
     entities: ["src/entity/*.ts"],
     cli: {
+        entitiesDir: ["src/database/entity/*.ts"],
         migrationsDir: ["src/database/migrations/*.ts"]
     }
 }
