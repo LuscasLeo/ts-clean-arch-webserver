@@ -1,7 +1,7 @@
 import {
   ConnectionOptions,
   createConnection,
-  getConnectionOptions
+  getConnectionOptions,
 } from "typeorm";
 import { getLogger } from "../logging";
 import ConfigurationService from "../services/configuration.service";
@@ -32,9 +32,9 @@ export async function createDatabaseConnection(
       `Connecting to postgres://${databaseUsername}@${databaseHost}:${databasePort}/${databaseName}`
     );
 
-    const predefinedConfig = await getConnectionOptions();
+    const { namingStrategy } = await getConnectionOptions();
 
-    const config: ConnectionOptions = {
+    const options: ConnectionOptions = {
       type: "postgres",
       host: databaseHost,
       port: databasePort,
@@ -42,13 +42,11 @@ export async function createDatabaseConnection(
       password: databasePassword,
       database: databaseName,
       logging: databaseLogEnabled,
+      namingStrategy,
       entities,
     };
 
-    const connection = await createConnection({
-      ...(predefinedConfig as any),
-      ...config,
-    });
+    const connection = await createConnection(options);
 
     return connection;
   } catch (err) {

@@ -15,9 +15,10 @@ const config = {
     logging: true,
 
     entities: ["src/entity/*.ts"],
+    migrations: ["database/migrations/*.ts"],
     cli: {
-        entitiesDir: ["src/database/entity/*.ts"],
-        migrationsDir: ["src/database/migrations/*.ts"]
+        entitiesDir: "src/entity",
+        migrationsDir: "database/migrations"
     }
 }
 

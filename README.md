@@ -11,6 +11,11 @@ yarn
 # Setup de variaveis ambientes [desenvolvimento]
 cp .env.example .env.dev 
 
+# IMPORTANTE: Inicie ou configure um banco de dados Postgres para conectar-se a aplicação
+
+# Cria estrutura no banco de dados
+yarn typeorm migration:run
+
 # Iniciar aplicação em desenvolvimento (ou também usar o debugger do VSCode [f5])
 yarn dev 
 ```
