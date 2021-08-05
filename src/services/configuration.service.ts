@@ -34,6 +34,11 @@ const numberOrFail = (variableName: string) => {
   return Number(val);
 };
 
+const booleanOrFail = (variableName: string) => {
+  const val = getOrFail(variableName);
+  return ["true", "1", "yes"].includes(val);
+}
+
 @Service()
 export default class ConfigurationService {
   constructor(
@@ -44,12 +49,11 @@ export default class ConfigurationService {
     public readonly databaseUsername = getOrFail("DATABASE_USERNAME"),
     public readonly databasePassword = getOrFail("DATABASE_PASSWORD"),
     public readonly databaseName = getOrFail("DATABASE_NAME"),
-    public readonly databaseLogEnabled = Boolean(getOrFail("DATABASE_LOG")),
+    public readonly databaseLogEnabled = booleanOrFail("DATABASE_LOG"),
 
     public readonly defaultUserName = getOrFail("DEFAULT_USER_NAME"),
     public readonly defaultUserPassword = getOrFail("DEFAULT_USER_PASSWORD"),
-    
-    public readonly jwtSecret = getOrFail("JWT_SECRET"),
 
+    public readonly jwtSecret = getOrFail("JWT_SECRET")
   ) {}
 }

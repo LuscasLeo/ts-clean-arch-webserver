@@ -11,7 +11,7 @@ const logger = getLogger("database");
 
 export class DatabaseConnectionError extends Error {
   constructor(public readonly error: any) {
-    super(`Error while connecting to the database`);
+    super(`Error while connecting to the database: ${error}`);
   }
 }
 

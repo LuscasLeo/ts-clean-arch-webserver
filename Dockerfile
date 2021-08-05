@@ -24,4 +24,6 @@ RUN npm install --production --force
 
 COPY --from=build /build/dist ./dist
 
+COPY --from=build /build/ormconfig.js .
+
 ENTRYPOINT [ "npm", "start" ]
