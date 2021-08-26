@@ -5,7 +5,7 @@ import {
   createExpressServer,
   getMetadataArgsStorage,
   HttpError,
-  RoutingControllersOptions
+  RoutingControllersOptions,
 } from "routing-controllers";
 import { routingControllersToSpec } from "routing-controllers-openapi";
 import { AuthorizationChecker } from "routing-controllers/types/AuthorizationChecker";
@@ -16,13 +16,12 @@ import { getLogger } from "../logging";
 import { ValidationErrorSet } from "../middlewares/validations";
 import controllers from "./controllers";
 
-
-
 const logger = getLogger("server");
 
 export function createServer(
-  authorizationChecker: AuthorizationChecker,
-  currentUserChecker: CurrentUserChecker
+  authorizationChecker?: AuthorizationChecker,
+  currentUserChecker?: CurrentUserChecker,
+  useOpenApi: boolean = false
 ) {
   const options: RoutingControllersOptions = {
     controllers,
@@ -31,11 +30,11 @@ export function createServer(
     currentUserChecker,
   };
 
-  const app = createExpressServer(options);
+  const app = createExpressServer(options) as Express;
 
   setupErrorHandler(app);
 
-  setupOpenAPI(app, options);
+  if (useOpenApi) setupOpenAPI(app, options);
 
   return app;
 }

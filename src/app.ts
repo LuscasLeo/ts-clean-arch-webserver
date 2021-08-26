@@ -21,13 +21,14 @@ export default class Application {
 
   async preStart() {
     const usersCount = await this.usersRepo.count();
-    if (usersCount == 0) {
-      this.logger.info("Creating default user");
+    const { defaultUserName, defaultUserPassword } = this.configuration;
 
-      const password = "example";
+    if (usersCount == 0) {
+      this.logger.info(`Creating default user '${defaultUserName}' `);
+
       const rootUser = this.usersRepo.create({
-        name: "admin",
-        password: await this.authService.encrypt(password),
+        name: defaultUserName,
+        password: await this.authService.encrypt(defaultUserPassword),
         roles: [AppRoles.ADMIN],
       });
 
@@ -37,8 +38,8 @@ export default class Application {
 
   async start() {
     const app = createServer(
-        this.authService.authorizationChecker.bind(this.authService),
-        this.authService.currentUserChecker.bind(this.authService)
+      this.authService.authorizationChecker.bind(this.authService),
+      this.authService.currentUserChecker.bind(this.authService)
     );
 
     app.use(express.json());
