@@ -7,7 +7,7 @@
         {
             "type": "pwa-node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Debugar Aplicação",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -25,6 +25,27 @@
             },
             "console": "integratedTerminal"
 
+        },
+        {
+          "type": "pwa-node",
+          "request": "launch",
+          "name": "Debugar Arquivo",
+          "skipFiles": [
+            "<node_internals>/**"
+          ],
+          "envFile": "${workspaceFolder}/.env.dev",
+          "preLaunchTask": "tsc: build - tsconfig.json",
+          "program": "${file}",
+          "outFiles": [
+            "${workspaceFolder}/dist/**/*.js"
+          ],
+          "sourceMaps": true,
+          "sourceMapPathOverrides": {
+            "meteor://💻app/*": "${workspaceFolder}/*",
+            "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
+            "webpack://?:*/*": "${workspaceFolder}/*"
+          },
+          "console": "integratedTerminal"
         }
     ]
 }

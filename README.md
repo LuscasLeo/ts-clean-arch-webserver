@@ -101,3 +101,55 @@ Project root
 ## Addons
 
 - [Rest Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) - Crie arquivos `.rest` para teste de rotas http e teste ali mesmo.
+
+## Utilidade
+
+### Debugar  arquivos de `Services` isoladamente
+
+- Em ambiente de desenvolvimento, é possivel executar um unico arquivo typescript de service com poucas linhas. Exemplo:
+
+```ts
+import Container, { Inject, Service } from "typedi";
+import { initDI } from "../utils";
+import ConfigurationService from "./configuration.service";
+
+@Service()
+export default class TesteService {
+  @Inject()
+  private readonly confiurationService: ConfigurationService;
+
+  async aguarde(milissegundos: number) {
+    await new Promise((resolve) =>
+      setTimeout(() => resolve(null), milissegundos)
+    );
+  }
+
+  async digaOla() {
+    console.log("Aguarde!");
+    await this.aguarde(5 * 1000);
+    console.log("Olá mundo!");
+    console.log(
+      `[TESTE DE INJEÇÃO DE DEPENDENCIA] Usuário padrão do sistema: ${this.confiurationService.defaultUserName}`
+    );
+  }
+}
+
+/**
+ * Linhas dedicatas a uso e execução isolada
+ */
+if (require.main == module) {
+  async function teste() {
+    /** Inicia a ferramente de Injeção de dependencias */
+    initDI();
+
+    /** Extrai o serviço diretamente do sistema de DI */
+    const service = Container.get(TesteService);
+
+    await service.digaOla();
+  }
+
+  /** Chama a função de teste. */
+  teste().catch((error) => console.error(error));
+}
+
+```
