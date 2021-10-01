@@ -7,7 +7,7 @@
         {
             "type": "pwa-node",
             "request": "launch",
-            "name": "Debugar Aplicação",
+            "name": "Depurar Aplicação",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -29,7 +29,7 @@
         {
           "type": "pwa-node",
           "request": "launch",
-          "name": "Debugar Arquivo",
+          "name": "Depurar Arquivo",
           "skipFiles": [
             "<node_internals>/**"
           ],
