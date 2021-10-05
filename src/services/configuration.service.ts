@@ -42,7 +42,6 @@ const booleanOrFail = (variableName: string) => {
 @Service()
 export default class ConfigurationService {
   constructor(
-    public readonly appPort = numberOrFail("APP_PORT"),
 
     public readonly databaseHost = getOrFail("DATABASE_HOST"),
     public readonly databasePort = numberOrFail("DATABASE_PORT"),
@@ -57,6 +56,5 @@ export default class ConfigurationService {
     public readonly defaultUserName = getOrFail("DEFAULT_USER_NAME"),
     public readonly defaultUserPassword = getOrFail("DEFAULT_USER_PASSWORD"),
 
-    public readonly jwtSecret = getOrFail("JWT_SECRET")
   ) {}
 }
