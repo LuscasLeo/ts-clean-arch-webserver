@@ -2,9 +2,7 @@
 import "reflect-metadata";
 import * as typeDI from "typedi";
 import Application from "./app";
-import { createDatabaseConnection } from "./database";
 import { getLogger } from "./logging";
-import ConfigurationService from "./services/configuration.service";
 import { initDI } from "./utils";
 
 /**
@@ -25,8 +23,6 @@ async function bootstrap() {
   initDI();
 
   logger.info("🚀 Initializing application");
-  await createDatabaseConnection(typeDI.Container.get(ConfigurationService));
-  logger.info(`📚 Connected to database`);
 
   const application = typeDI.Container.get(Application);
 

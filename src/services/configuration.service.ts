@@ -37,23 +37,9 @@ const numberOrFail = (variableName: string) => {
 const booleanOrFail = (variableName: string) => {
   const val = getOrFail(variableName);
   return ["true", "1", "yes"].includes(val);
-}
+};
 
 @Service()
 export default class ConfigurationService {
-  constructor(
-
-    public readonly databaseHost = getOrFail("DATABASE_HOST"),
-    public readonly databasePort = numberOrFail("DATABASE_PORT"),
-    public readonly databaseUsername = getOrFail("DATABASE_USERNAME"),
-    public readonly databasePassword = getOrFail("DATABASE_PASSWORD"),
-    public readonly databaseName = getOrFail("DATABASE_NAME"),
-
-    public readonly databaseLogEnabled = booleanOrFail("DATABASE_LOG"),
-    public readonly databaseSyncEnabled = booleanOrFail("DATABASE_SYNC"),
-
-    public readonly defaultUserName = getOrFail("DEFAULT_USER_NAME"),
-    public readonly defaultUserPassword = getOrFail("DEFAULT_USER_PASSWORD"),
-
-  ) {}
+  public readonly logLevel = getOrFail("LOG_LEVEL");
 }
