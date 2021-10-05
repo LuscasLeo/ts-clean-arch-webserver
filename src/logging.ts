@@ -1,6 +1,7 @@
 import winston, { format } from "winston";
-import DailyRotateFile from "winston-daily-rotate-file";
 import { Console } from "winston/lib/winston/transports";
+
+winston.level = process.env.LOG_LEVEL
 
 const basicFormat = format.combine(
     format.metadata(), 
@@ -10,13 +11,6 @@ const basicFormat = format.combine(
 winston.add(
     new Console({
         format: format.combine(format.colorize(), format.errors(),basicFormat, format.simple()),
-    })
-);
-
-winston.add(
-    new DailyRotateFile({
-        filename: "logs/%DATE%.log",
-        format: format.combine(basicFormat, format.json()),
     })
 );
 
