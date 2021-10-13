@@ -49,6 +49,7 @@ export default class ConfigurationService {
     public readonly databaseUsername = getOrFail("DATABASE_USERNAME"),
     public readonly databasePassword = getOrFail("DATABASE_PASSWORD"),
     public readonly databaseName = getOrFail("DATABASE_NAME"),
+    public readonly databaseSchema = getOrFail("DATABASE_SCHEMA"),
 
     public readonly databaseLogEnabled = booleanOrFail("DATABASE_LOG"),
     public readonly databaseSyncEnabled = booleanOrFail("DATABASE_SYNC"),

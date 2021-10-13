@@ -26,6 +26,7 @@ export async function createDatabaseConnection(
       databasePort,
       databaseUsername,
       databaseLogEnabled,
+      databaseSchema
     } = configuration;
 
     logger.info(
@@ -42,6 +43,7 @@ export async function createDatabaseConnection(
       password: databasePassword,
       database: databaseName,
       logging: databaseLogEnabled,
+      schema: databaseSchema,
       namingStrategy,
       entities,
     };
