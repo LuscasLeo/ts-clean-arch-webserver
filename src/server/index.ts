@@ -1,22 +1,26 @@
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
-import { Express, NextFunction, Request, Response } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import { JsonWebTokenError } from "jsonwebtoken";
 import {
   createExpressServer,
   getMetadataArgsStorage,
   HttpError,
   RoutingControllersOptions,
+  useExpressServer,
 } from "routing-controllers";
 import { routingControllersToSpec } from "routing-controllers-openapi";
 import { AuthorizationChecker } from "routing-controllers/types/AuthorizationChecker";
 import { CurrentUserChecker } from "routing-controllers/types/CurrentUserChecker";
 import swaggerUi from "swagger-ui-express";
 import { QueryFailedError } from "typeorm";
+import { v4 } from "uuid";
 import { getLogger } from "../logging";
 import { ValidationErrorSet } from "../middlewares/validations";
 import controllers from "./controllers";
 
 const logger = getLogger("server");
+
+const REQUEST_ID_HEADER = "x-request-id";
 
 export function createServer(
   authorizationChecker?: AuthorizationChecker,
@@ -30,7 +34,9 @@ export function createServer(
     currentUserChecker,
   };
 
-  const app = createExpressServer(options) as Express;
+  const app = express();
+  setupRequestId(app);
+  useExpressServer(app, options);
 
   setupErrorHandler(app);
 
@@ -39,8 +45,20 @@ export function createServer(
   return app;
 }
 
+function setupRequestId(app: Express) {
+  app.use((req, res, next) => {
+    const id = v4();
+    req.headers[REQUEST_ID_HEADER] = id;
+
+    res.setHeader(REQUEST_ID_HEADER, id);
+
+    next();
+  });
+}
+
 function setupErrorHandler(app: Express) {
   app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    const requestID = res.getHeader(REQUEST_ID_HEADER);
     try {
       if (err instanceof HttpError) {
         return res.status(err.httpCode).json({
@@ -56,7 +74,7 @@ function setupErrorHandler(app: Express) {
       }
 
       if (err instanceof QueryFailedError) {
-        logger.error(`Query Error on path ${req.path}`, err);
+        logger.error(`Query Error on path ${req.path}`, { err, requestID });
         return res.status(500).json({ message: "Internal Server Error!" });
       }
 
@@ -72,15 +90,22 @@ function setupErrorHandler(app: Express) {
       }
 
       if (err instanceof Error) {
-        logger.error(err);
-        return res.status(500).json({
+        logger.error("Error handling request!", {
           message: err.message,
           name: err.name,
           stack: err.stack,
+          requestID,
+        });
+      } else {
+        logger.error("Unkown error handling request!", {
+          message: err.message,
+          name: err.name,
+          stack: err.stack,
+          requestID,
         });
       }
 
-      return res.status(500).json({ message: "Internal Server Error!", err });
+      return res.status(500).json({ message: "Internal Server Error!" });
     } finally {
       next();
     }
